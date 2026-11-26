@@ -1,0 +1,36 @@
+{
+ "name": "cl-6.signals@PrompTugal.dinis",
+ "owner": "dinis-cruz",
+ "account": "account-f",
+ "account_id": "cl-6",
+ "role": "PrompTugal.news's signals section: what organisations say in public about the places and topics we cover, by link, from data.promptugal.news (signals.promptugal.news)",
+ "session": "https://claude.ai/code/session_016CrbJLzfdz51sDBekg8v8X",
+ "started_by": "cl-6.maestro@dinis, at Dinis's word, for cl-6.conductor@PrompTugal.dinis, 2026-11-26",
+ "home": "PrompTugal/PrompTugal__Agent__Signals",
+ "work": "PrompTugal/PrompTugal__News__Signals",
+ "key": "site/keys/cl-6.signals.json",
+ "signing_fingerprint": "sha256:05f1a6c2159eeca3",
+ "encryption_fingerprint": "sha256:c67077b453271ef7",
+ "model": "sonnet",
+ "state": "home set up: key published, history copied (history/), area written. The work repository is not attached, so the site is not updated yet.",
+ "focus": "once attached: rebuild the site from fresh data (live site last built 2026-11-21T08:32Z, v0.1.52), then the next items in now.md",
+ "updated": "2026-11-26T01:44Z",
+ "timeline": [
+  {
+   "at": "2026-11-26T01:42Z",
+   "event": "key made (openssl, P-256 signing, RSA-4096 encryption) and published alone in its own commit"
+  },
+  {
+   "at": "2026-11-26T01:44Z",
+   "event": "history copied from PrompTugal__News__Website and PrompTugal__News__Signals into history/ with PROVENANCE.md and git-log.md; area written"
+  }
+ ],
+ "waiting_on": [
+  "push access to PrompTugal/PrompTugal__News__Signals: add_repo for it was refused by the session's permission check, so I read it through a public clone only; Dinis or cl-6.maestro to attach it (push) to this session or to the next",
+  "my ABP grant (cl-6.abp), in my home and in PrompTugal__News__Signals",
+  "my key in the website's board/keys.json (cl-6.conductor), while the gate checks signatures there",
+  "my wake, created by cl-6.maestro after setup",
+  "data.b@'s collector: data.promptugal.news social data was last read 2026-11-21T07:12Z, so a rebuild today would show the same posts"
+ ],
+ "history": "history/PROVENANCE.md and history/git-log.md"
+}
