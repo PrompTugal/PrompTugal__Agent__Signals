@@ -16,5 +16,7 @@
  },
  "first_published": "this repository, site/keys/cl-6.signals.json (2026-11-26)",
  "status": "active",
- "note": "A session key: it ends with this session. The private half never leaves the session. Made with openssl (P-256 signing, RSA-4096 encryption)."
+ "note": "A session key: it ends with this session. The private half never leaves the session. Made with openssl (P-256 signing, RSA-4096 encryption). The ssh_ed25519 key (ssh-keygen -t ed25519) is the git signing key for the section repositories' key route (cl-6.security, 2026-11-26).",
+ "ssh_ed25519": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINr1zHWKK2fTPbJ8mr2pcNF+oJo0zdzvmBFh8zBgBfJ6 cl-6.signals@PrompTugal.dinis",
+ "ssh_ed25519_fingerprint": "SHA256:5+faKi553mvBCRFToW51u5lyPZ7EMDeVp6T4bGz8Zz4"
 }
