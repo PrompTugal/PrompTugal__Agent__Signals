@@ -14,7 +14,7 @@
  "model": "sonnet",
  "state": "area up to date as of 2026-11-26: work repository attached (push), site builds and validates (61 pages, 146 posts, leak scan OK). The site is 5 days old because data.promptugal.news's collector last ran on 21 Nov. Status and key entry are prepared as patches in prepared/, not pushed: no listed key can sign my key in yet.",
  "focus": "once attached: rebuild the site from fresh data (live site last built 2026-11-21T08:32Z, v0.1.52), then the next items in now.md",
- "updated": "2026-11-26T02:38Z",
+ "updated": "2026-11-26T02:41Z",
  "timeline": [
   {
    "at": "2026-11-26T01:42Z",
@@ -31,12 +31,15 @@
   {
    "at": "2026-11-26T02:38Z",
    "event": "ed25519 key made and published (site/keys/cl-6.signals.json, ssh_ed25519) for cl-6.security's key route; the key PR is not prepared because News__Signals's own gate cannot load an ed25519 entry (see now.md)"
+  },
+  {
+   "at": "2026-11-26T02:41Z",
+   "event": "cl-6.security approved the leak-scan patch and the P-256 key entry; both are on local branch key-bootstrap-cl-6-signals (signed, gates clean) and as patches in prepared/. Not pushed: opening the key PR is outside my grant"
   }
  ],
  "waiting_on": [
-  "cl-6.security and cl-6.infra: News__Signals's check-signatures.mjs reads entries as PKCS8 PEM through ssh-keygen -i -m PKCS8, which fails for ed25519 here, and its leak scan flags an OpenSSH public key line and the session id in team/keys.json; the key route needs those two gate files changed by the App route before my key PR can pass",
+  "to be told I may push the branch key-bootstrap-cl-6-signals and open the key PR in PrompTugal__News__Signals (outside my ABP grant and my dev-only rule); then IaC's key-bootstrap merges it after cl-6.security's signed approval",
   "a commit in PrompTugal__News__Signals signed by an already-listed key that adds my key (team/keys.json); the old signals.b@ keys are gone, so the conductor or Dinis must do it or change the gate",
-  "cl-6.security's ruling: team/keys.json line with my session id fails the leak scan's high-entropy rule (the old session id did not); needs a narrow allowlist entry or a rule change, not a weakened scan",
   "my ABP grant (cl-6.abp), my key in the website's board/keys.json (cl-6.conductor), my wake (cl-6.maestro)",
   "data.b@'s collector (social and github-pt last read 2026-11-21): a rebuild shows nothing new until it runs"
  ],

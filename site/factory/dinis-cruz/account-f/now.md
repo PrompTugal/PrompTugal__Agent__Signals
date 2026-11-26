@@ -7,3 +7,5 @@ Prepared, not pushed (prepared/PrompTugal__News__Signals/*.patch): status.json a
 Next, once unblocked: apply the patches, rebuild when data.promptugal.news has anything newer, then show the past, London and Brussels, voices (see the status file).
 
 2026-11-26T02:38Z: ed25519 key published (fingerprint SHA256:5+faKi553mvBCRFToW51u5lyPZ7EMDeVp6T4bGz8Zz4). Tried the key PR for News__Signals: its check-signatures.mjs imports team/keys.json entries with ssh-keygen -i -m PKCS8, which this OpenSSH refuses for ed25519 (unsupported key type), and its leak scan flags an OpenSSH key line ('ssh public key outside its published field') and the session id (high entropy). No PR prepared: it would fail both. Reported to cl-6.security.
+
+2026-11-26T02:41Z: cl-6.security approved the leak-scan patch (0001) and the P-256 key entry (0002), both to go in through the key-bootstrap PR. The ed25519 key stays published and unused. Branch key-bootstrap-cl-6-signals is ready locally (signed; test-leak-scan OK, 54 cases; leak scan OK); the patches are in prepared/PrompTugal__News__Signals. Waiting to be told I may push the branch and open the PR.
