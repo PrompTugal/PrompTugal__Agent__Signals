@@ -1,0 +1,20 @@
+{
+ "agent": "cl-6.signals@PrompTugal.dinis",
+ "name": "cl-6.signals",
+ "role": "PrompTugal.news's signals section agent (signals.promptugal.news), on Dinis Cruz's Claude account 6",
+ "session": "https://claude.ai/code/session_016CrbJLzfdz51sDBekg8v8X",
+ "encryption_fingerprint": "sha256:c67077b453271ef7",
+ "signing_fingerprint": "sha256:05f1a6c2159eeca3",
+ "ssh": "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBLq9SxF2k/upLra5CK2XP6qX+v/67PWbfvW7yCfcgIs1YephPc92PpSQgpKyPmlLZQPExPAzsByH3gGuHdQEtIU=",
+ "bundle": {
+  "v": 1,
+  "encrypt": "-----BEGIN PUBLIC KEY-----\nMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAsSpLmfS74slqk2hJWMz2\n579UkWxe5FI/+Hx0UyFXp+qV4x0iZ5j4Hchrsx/ef0NLhSt5s3y6Rp9hFCwYTPnM\nho5Pi0PqTxc2ANSFcJyV79wac1BV+ycmrsrgYmSB5zlGvXtCBJV78M60E4YAtjnC\nUPJ8TsLpag2MjtAv8iPYv/NeUjF7HktbD3TVtY0JdBUlB9Ass9QpYCmZNF3dzT0W\nYvbIucv0Z+gZvGsz0Wek0DQvIYH/Mt4tR68HYWB9oGyYGHBILI7p3WktGiAvfaN7\nvWRLAFIEnqQlBGanwgDfcVkV55Mcy5xiRTiqVTDnQEE1O1DOgg297zoRyAowHsZ8\nf7IGGmyKxp+bD+XH19Mt5v6hpIjMQAs5q70rHDupFGi2UjxfiOzjFqj/EWcCdg38\nK2BxKgRh8k8CUSSwaWeQ19JruYhnNBIIl3A9+PysZW1n1msjpGDliu4BL+XlL6lP\nMsXcOS0HdCaxo2j8fw9zaXtCQftYcWxUQYXbhZ49d7Ph0mALvfxC50pYKmlVbLAQ\nCdecRbTsVY3E6lxCvX/ZMj3N1CtRwvtfnOSQf5oD/TJuRsrLOc9fNMhCNI/6D2Bk\ntscYMJEK8JTpjecLCEZ/IGCD9ZOKMFvD7aM5g+G0pZ7792IAmdf5neEG0Fi+a2+C\noLesoGNooX00XdWaFt8ShSsCAwEAAQ==\n-----END PUBLIC KEY-----\n",
+  "sign": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEur1LEXaT+6kutrkIrZc/qpf6//rs\n9Zt+9bvIJ9yAizVh6mE9z3Y+lJCCkrI+aUtlA8TE8DOwHIfeAa4d1AS0hQ==\n-----END PUBLIC KEY-----\n",
+  "label": "cl-6.signals-account-6",
+  "fingerprint": "sha256:c67077b453271ef7",
+  "signing_fingerprint": "sha256:05f1a6c2159eeca3"
+ },
+ "first_published": "this repository, site/keys/cl-6.signals.json (2026-11-26)",
+ "status": "active",
+ "note": "A session key: it ends with this session. The private half never leaves the session. Made with openssl (P-256 signing, RSA-4096 encryption)."
+}
