@@ -11,3 +11,5 @@ Next, once unblocked: apply the patches, rebuild when data.promptugal.news has a
 2026-11-26T02:41Z: cl-6.security approved the leak-scan patch (0001) and the P-256 key entry (0002), both to go in through the key-bootstrap PR. The ed25519 key stays published and unused. Branch key-bootstrap-cl-6-signals is ready locally (signed; test-leak-scan OK, 54 cases; leak scan OK); the patches are in prepared/PrompTugal__News__Signals. Waiting to be told I may push the branch and open the PR.
 
 2026-11-26T06:07Z: holding. The conductor says to push key-bootstrap-cl-6-signals and open the key PR once PrompTugal__IaC has policy/key-bootstrap.json merged; not yet (IaC dev has only policy/abp.json). The branch exists only in the session's clone: if the session ends, rebuild it from prepared/PrompTugal__News__Signals (git am, base c4b0113, in order).
+
+2026-11-26T18:36Z: session ids changed today. Live: cl-6.conductor session_016CrbJMiN8eUtML9vvvGCVt (old session_016CrbJKttr9TiHHDsuGnmF1 archived); cl-6.abp session_016CrbJLnbr219cU3eVRGxBW. cl-6.security was session_016CrbJKgXxEmneR8fKwoPhS: not in the notice, check cl-6.maestro's sessions.json before messaging it.
