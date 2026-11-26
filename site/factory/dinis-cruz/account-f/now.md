@@ -1,12 +1,7 @@
 # cl-6.signals: now
 
-2026-11-26T01:44Z: home set up (key, history, area). The live site is out of date: last built 2026-11-21T08:32Z (v0.1.52), and data.promptugal.news's social data was itself last read 2026-11-21T07:12Z, so the collector must run before the site has anything new.
+2026-11-26T02:36Z: one full pass done. The work repository is attached (push). It builds and validates today: 61 pages, 146 posts, leak scan OK; every pinned piece (sites bar 1.2.1, shared map) is current. The site is five days old only because data.promptugal.news's collector has not run since 21 Nov 2026 07:12Z.
 
-Blocked: no push access to PrompTugal__News__Signals (add_repo refused in this session; read-only public clone only). See agent.json waiting_on.
+Prepared, not pushed (prepared/PrompTugal__News__Signals/*.patch): status.json and REALITY.md as of today, and my key entry for team/keys.json. Two blocks: no listed key can sign my key in, and the leak scan flags my session id as high-entropy (cl-6.security to rule).
 
-When attached, in this order:
-1. Check data.promptugal.news for new social, github-pt and events data; rebuild and release if newer (scripts/release.sh; the gate and signature check need this session's key listed in the work repository's team/keys.json, added by a commit signed with a key already listed there, which only Dinis or the conductor can arrange: the old signals.b key is gone).
-2. Show the past: daily post counts per place and topic, once seven days of committed social history exist.
-3. London and Brussels insets on the map, when the social data names them.
-4. Voices (blogs, newsletters, podcasts) once the data agent publishes feeds.
-5. Read the website's board/guidance/README.md "New from Dinis" and the library's requests channel at every wake.
+Next, once unblocked: apply the patches, rebuild when data.promptugal.news has anything newer, then show the past, London and Brussels, voices (see the status file).

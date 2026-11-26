@@ -1,0 +1,73 @@
+From aec2b8466dd4a86d5fa4831844b9d17900d445be Mon Sep 17 00:00:00 2001
+From: "cl-6.signals" <cl-6.signals@PrompTugal.dinis>
+Date: Thu, 26 Nov 2026 02:36:44 +0000
+Subject: [PATCH 1/2] cl-6.signals takes over: status and REALITY as of 26 Nov
+ 2026
+
+Agent: cl-6.signals@PrompTugal.dinis
+Claude-Session: https://claude.ai/code/session_016CrbJLzfdz51sDBekg8v8X
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+---
+ REALITY.md                     |  1 +
+ board/team/signals/status.json | 17 ++++++++++-------
+ 2 files changed, 11 insertions(+), 7 deletions(-)
+
+diff --git a/REALITY.md b/REALITY.md
+index 233166e..f59cc3b 100644
+--- a/REALITY.md
++++ b/REALITY.md
+@@ -94,3 +94,4 @@
+ - 2026-11-20 08:45Z (date -u): /places/ shows the shared map, ptmap 1.0.2 (designer@PrompTugal.dinis; review "passed (security@ 168c14fc5)"; outline Natural Earth, public domain, via world-atlas, ISC, notice in full in the file's header). Its two files are vendored at src/assets/ptmap/1.0.2/, byte-identical to the Website repo's design/shared-map/v1.0.2/, and each build checks them against sites.json map.versions["1.0.2"].integrity (sha384). A differing byte fails the build; a registry that no longer lists 1.0.2, or one read only from the snapshot, leaves the map out and says so on /how/. Coordinates come from https://promptugal.news/data/site/places-registry.json (Dinis, 19 Nov about 17:40 UTC); 18 of the 19 places are drawn (the Algarve is a region with no point). No London or Brussels inset: this site has no data for them yet. Seen in Chromium at 390 px: 18 dots, no script errors.
+ - 2026-11-20 19:50Z (date -u): /code/ and each /code/<org>/ load their lists in the browser from data.promptugal.news's github-pt/latest.json when the page opens and every 10 minutes (Dinis, 19 Nov about 01:13 UTC: "load the data in the browser"). A list is replaced only by a newer file (its data_read_at) that passes the build's own checks; otherwise the built list stays. The checks are in one module, src/assets/code-core.mjs, imported by both the build and the browser's src/assets/code.js. scripts/test-code.mjs (49 cases) runs in release and CI. Seen in Chromium at 390 px with a newer fixture: both lists reloaded, a javascript: repository and markup in a name did not get through, no script errors.
+ - 2026-11-21 08:50Z (date -u): /how/ has "The collector's recent runs", built from data.promptugal.news's social/reads.json: the last 14 runs (reads that worked, failed, or got a changed response) and the reads failing in the newest run with the start of their streak. In every run in the file the five Bluesky keyword searches return HTTP 403; the five organisation feeds are read. Only times, counts, read names and statuses are used; request addresses and hashes are neither shown nor kept in data/snapshot/social_reads.json.
++- 2026-11-26T02:36Z (date -u): cl-6.signals@PrompTugal.dinis (account F, home PrompTugal/PrompTugal__Agent__Signals) takes over from signals.b@. A local build today gives 61 pages and 146 posts (the same data as 21 Nov 2026 07:12Z: the collector has not run since), validate OK, leak scan OK. The site itself is unchanged; its key entry and status are prepared and wait for a commit signed by a listed key.
+diff --git a/board/team/signals/status.json b/board/team/signals/status.json
+index 3973d2d..68bf326 100644
+--- a/board/team/signals/status.json
++++ b/board/team/signals/status.json
+@@ -1,9 +1,9 @@
+ {
+-  "agent": "signals.b@PrompTugal.dinis",
++  "agent": "cl-6.signals@PrompTugal.dinis",
+   "site": "https://signals.promptugal.news",
+   "repo": "PrompTugal/PrompTugal__News__Signals",
+-  "updated": "2026-11-21T08:50:00Z",
+-  "state": "wake 21 Nov 08:28 UTC: the collector's recent runs on /how/; the hand-over (board/team/signals/handovers/2026-11-19-0735.md) still stands for the next session",
++  "updated": "2026-11-26T02:36Z",
++  "state": "2026-11-26T02:36Z (date -u): handed to cl-6.signals@ on account F, whose home is PrompTugal/PrompTugal__Agent__Signals (history/ holds this file's earlier life). The site builds and validates today (61 pages, 146 posts, leak scan OK) but is 5 days old because data.promptugal.news's collector has not run since 21 Nov 2026 07:12Z (social) and 07:10Z (github-pt). Every pinned piece is current (sites bar 1.2.1 and the shared map are the registry's newest). Nothing is stale on this side; the data is.",
+   "passes": {
+     "opening_conductor": "ran (08:30 UTC): no new rows from Dinis; no 7-day post history published, so 'show the past' starts with the collector's own run history, which exists (44 runs)",
+     "security_pre_review": "ran (Sonnet): 9 controls (no request addresses or hashes shown or kept, names and statuses by pattern, counts worked out here, caps, a missing file never fails the build); all built",
+@@ -42,7 +42,10 @@
+     "2026-11-20T19:50Z (date -u): Code pages load the data in the browser (Dinis, 19 Nov 01:13): /code/ releases and most recently pushed, and each /code/<org>/, reload from github-pt/latest.json on open and every 10 minutes, replacing a list only with a newer file (data_read_at) that passes the build's own checks; the checks moved into src/assets/code-core.mjs, which the build and the browser both import, so they cannot drift (pre-review point 9); the build's /code/ output is unchanged apart from licence links now carrying rel=\"noopener noreferrer nofollow\"; scripts/test-code.mjs, 49 cases, in release and CI",
+     "2026-11-21T08:50Z (date -u): /how/ shows the collector's recent runs from data.b@'s social/reads.json (the last 14 runs: reads that worked, failed and got a changed response; which reads fail now and since when). It shows that the 5 Bluesky keyword searches have returned HTTP 403 in every run in the file (since 18 Nov 15:07 UTC), while the organisation accounts read fine. No request address or hash is shown or kept in the snapshot; scripts/test-runs.mjs, 25 cases, in release and CI"
+   ],
+-  "blocked": [],
++  "blocked": [
++    "Signing: this session's key is not yet in team/keys.json, and a key can only be added by a commit signed with a key already listed. The old signals.b@ keys ended with their sessions. Needs the conductor or Dinis (prepared entry in PrompTugal__Agent__Signals prepared/).",
++    "Data: social and github-pt were last read on 21 Nov 2026; data.b@'s collector (cl-6.data) needs to run before a rebuild shows anything new."
++  ],
+   "next": [
+     "London, and the EU through Brussels (Dinis, 19 Nov 2026 about 17:40 UTC, board/guidance/2026-11-19-cameras-as-links-and-the-map.md): the map is on /places/ with Portugal (20 Nov); data.promptugal.news's social data names no London or Brussels place yet (19 places, all in Portugal, read 20 Nov 07:18 UTC). When it does, add London as a place and fill the map's london and eu insets.",
+     "show the past: daily post counts per place and topic over time, once data.b@'s committed social history has 7 days (gaps shown as gaps)",
+@@ -60,8 +63,7 @@
+   "asks": [
+     "Dinis: the signals lane is made; to publish its public config, allow the four narrow leak-scan allowlist entries for src/assets/obs/obs.json (the same as civic's), or have security@ add them; until then nothing is counted.",
+     "Dinis: the 5 organisation accounts read today are all news outlets or public bodies on Bluesky; which organisations should data.b@ add first for Web Summit, AI and startups?",
+-    "Dinis: the platforms' own embeds need third-party scripts, which the gate forbids; posts stay as links unless you want embeds.",
+-    "Dinis: this signals.b@ session has handed over. Its git signing key lives only in its container. How should the next session's key be added to team/keys.json? Adding it needs a commit signed with a listed key. Options: this session adds it before its container goes, or you add it by hand."
++    "Dinis: the platforms' own embeds need third-party scripts, which the gate forbids; posts stay as links unless you want embeds."
+   ],
+   "data_outlook": "21 Nov 07:13 UTC: 146 posts, 19 places, all in Portugal; no London or Brussels data. In every run in social/reads.json the 5 Bluesky keyword searches (web-summit, lisboa, algarve, startup-portugal, ia-portugal) fail with HTTP 403; only the 5 organisation feeds are read. Passed to data.b@ through conductor.b@.",
+   "library_requests": {
+@@ -77,5 +79,6 @@
+     "first_plan": "show the past: a daily count of organisations' posts per place and topic over time, built from the social files data.b@ now commits hourly, drawn with gaps as gaps; to start once 7 days of committed files exist"
+   },
+   "times_note": "From 19 Nov 01:55 UTC every time here is taken from date -u (security@'s ruling). Some earlier stamps in this file (e.g. 'updated' 02:00Z and 02:10Z, and 'about 01:40', '01:50' and '02:00' in done items) were estimates and ran up to about 20 minutes ahead of the real time; the commit times in git are the true ones.",
+-  "degraded": []
++  "degraded": [],
++  "formerly": "signals.b@PrompTugal.dinis (account B, 18 to 21 Nov 2026)"
+ }
+-- 
+2.43.0
+
