@@ -1,33 +1,19 @@
-From b2dc0b11aa6833c591fd1e267882504c6cf0b219 Mon Sep 17 00:00:00 2001
-From: "cl-6.signals" <cl-6.signals@PrompTugal.dinis>
-Date: Fri, 27 Nov 2026 02:43:13 +0000
-Subject: [PATCH] release.sh: push work/<agent> and wait for the gate; never
- push dev
-
-For the dev-gate (IaC #35). Not for use until cl-6.abp's P19 is in force and cl-6.security has approved this file (scripts/** is a gate path).
-
-Agent: cl-6.signals@PrompTugal.dinis
-Claude-Session: https://claude.ai/code/session_016CrbJLzfdz51sDBekg8v8X
-Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
----
- scripts/release.sh | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
-
 diff --git a/scripts/release.sh b/scripts/release.sh
-index 3eb9343..75afba3 100755
+index 3eb9343..8e62cf7 100755
 --- a/scripts/release.sh
 +++ b/scripts/release.sh
-@@ -19,6 +19,9 @@ node scripts/test-check-signatures.mjs
+@@ -19,6 +19,10 @@ node scripts/test-check-signatures.mjs
  scripts/test-deciding-step.sh
  node scripts/check-signatures.mjs origin/dev HEAD   # this tree's check, as a test of it
  scripts/check-signatures-trusted.sh origin/dev origin/dev HEAD   # the deployed copy's check: the one that decides
 +# With the dev-gate on (IaC #35, cl-6.conductor, 27 Nov 2026): never push dev. Push the release commit to work/<agent>, then wait for
 +# the gate to fast-forward dev to it. A tag gate/<agent>/<sha12>-fail means the gate refused the release.
-+AGENT_NAME="${AGENT_NAME:-cl-6.signals}"
++AGENT_NAME=cl-6.signals   # hard-coded, never from the environment (cl-6.security@, 27 Nov 2026)
++last=""                   # the sha this script last pushed to work/${AGENT_NAME}; empty means the branch must not exist yet
  for i in 1 2 3 4 5; do
    git fetch -q origin dev
    git rebase -q origin/dev
-@@ -29,7 +32,16 @@ for i in 1 2 3 4 5; do
+@@ -29,7 +33,18 @@ for i in 1 2 3 4 5; do
    node scripts/check-commits.mjs origin/dev HEAD >/dev/null
    node scripts/check-signatures.mjs origin/dev HEAD >/dev/null
    scripts/check-signatures-trusted.sh origin/dev origin/dev HEAD >/dev/null
@@ -35,7 +21,9 @@ index 3eb9343..75afba3 100755
 -  sleep $((i * 3))
 +  sha=$(git rev-parse HEAD)
 +  base=$(git rev-parse origin/dev)
-+  git -c push.negotiate=true push -q -f origin "HEAD:refs/heads/work/${AGENT_NAME}"
++  # only the explicit lease, naming the sha last pushed: never -f, never --force, never a bare lease, never another ref
++  git -c push.negotiate=true push -q --force-with-lease="refs/heads/work/${AGENT_NAME}:${last}" origin "HEAD:refs/heads/work/${AGENT_NAME}"
++  last="$sha"
 +  # up to about 20 minutes, a look every 90 seconds
 +  for w in $(seq 1 13); do
 +    sleep 90
@@ -47,6 +35,3 @@ index 3eb9343..75afba3 100755
  done
 -echo "release failed after 5 attempts" >&2; exit 1
 +echo "release did not reach dev after 5 rounds" >&2; exit 1
--- 
-2.43.0
-
