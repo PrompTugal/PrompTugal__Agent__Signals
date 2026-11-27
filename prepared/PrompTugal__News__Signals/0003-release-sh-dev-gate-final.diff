@@ -1,5 +1,5 @@
 diff --git a/scripts/release.sh b/scripts/release.sh
-index 3eb9343..229bf97 100755
+index 3eb9343..ae4e8db 100755
 --- a/scripts/release.sh
 +++ b/scripts/release.sh
 @@ -1,5 +1,5 @@
@@ -9,7 +9,7 @@ index 3eb9343..229bf97 100755
  set -euo pipefail
  cd "$(dirname "$0")/.."
  # Refuse during a hold (finding 3), with uncommitted changes (finding 4: the gates must check what is
-@@ -19,9 +19,14 @@ node scripts/test-check-signatures.mjs
+@@ -19,9 +19,19 @@ node scripts/test-check-signatures.mjs
  scripts/test-deciding-step.sh
  node scripts/check-signatures.mjs origin/dev HEAD   # this tree's check, as a test of it
  scripts/check-signatures-trusted.sh origin/dev origin/dev HEAD   # the deployed copy's check: the one that decides
@@ -22,10 +22,15 @@ index 3eb9343..229bf97 100755
    git fetch -q origin dev
 -  git rebase -q origin/dev
 +  git merge-base --is-ancestor origin/dev HEAD || git merge --no-edit -S origin/dev   # a signed merge, by commit.gpgsign
++  # a leftover work/<agent> head from an earlier release is merged onto, never overwritten (cl-6.security@, 27 Nov 2026)
++  if [ -n "$(git ls-remote origin "refs/heads/work/${AGENT_NAME}" | cut -f1)" ]; then
++    git fetch -q origin "refs/heads/work/${AGENT_NAME}:refs/remotes/origin/work/${AGENT_NAME}"
++    git merge-base --is-ancestor "origin/work/${AGENT_NAME}" HEAD || git merge --no-edit -S "origin/work/${AGENT_NAME}"
++  fi
    # One gate per line: under set -e a failure inside an && chain does not stop the script (specialist.code@ finding 1).
    node scripts/build.mjs >/dev/null
    node scripts/validate.mjs >/dev/null
-@@ -29,7 +34,16 @@ for i in 1 2 3 4 5; do
+@@ -29,7 +39,16 @@ for i in 1 2 3 4 5; do
    node scripts/check-commits.mjs origin/dev HEAD >/dev/null
    node scripts/check-signatures.mjs origin/dev HEAD >/dev/null
    scripts/check-signatures-trusted.sh origin/dev origin/dev HEAD >/dev/null
