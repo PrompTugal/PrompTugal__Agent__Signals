@@ -14,7 +14,7 @@
  "model": "sonnet",
  "state": "area up to date as of 2026-11-26: work repository attached (push), site builds and validates (61 pages, 146 posts, leak scan OK). The site is 5 days old because data.promptugal.news's collector last ran on 21 Nov. Status and key entry are prepared as patches in prepared/, not pushed: no listed key can sign my key in yet.",
  "focus": "once attached: rebuild the site from fresh data (live site last built 2026-11-21T08:32Z, v0.1.52), then the next items in now.md",
- "updated": "2026-11-26T11:18Z",
+ "updated": "2026-11-27T07:26Z",
  "timeline": [
   {
    "at": "2026-11-26T01:42Z",
@@ -43,6 +43,10 @@
   {
    "at": "2026-11-26T11:18Z",
    "event": "ABP grant read (abp/cl-6.signals.md in PrompTugal__Agent__ABP, policy v1.2.0, observe mode); R14 label file written. Read it at the start of every wake"
+  },
+  {
+   "at": "2026-11-27T07:26Z",
+   "event": "pushed key/cl-6.signals (e88f26d) to PrompTugal__News__Signals under the key_branch grant: one signed commit, only my team/keys.json entry; no PR, no approval requested (waits for Dinis's word and IaC #34, #35, #36)"
   }
  ],
  "waiting_on": [
