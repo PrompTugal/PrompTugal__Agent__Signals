@@ -1,5 +1,5 @@
 diff --git a/scripts/release.sh b/scripts/release.sh
-index 3eb9343..ae4e8db 100755
+index 3eb9343..4dad50a 100755
 --- a/scripts/release.sh
 +++ b/scripts/release.sh
 @@ -1,5 +1,5 @@
@@ -9,44 +9,50 @@ index 3eb9343..ae4e8db 100755
  set -euo pipefail
  cd "$(dirname "$0")/.."
  # Refuse during a hold (finding 3), with uncommitted changes (finding 4: the gates must check what is
-@@ -19,9 +19,19 @@ node scripts/test-check-signatures.mjs
+@@ -19,9 +19,14 @@ node scripts/test-check-signatures.mjs
  scripts/test-deciding-step.sh
  node scripts/check-signatures.mjs origin/dev HEAD   # this tree's check, as a test of it
  scripts/check-signatures-trusted.sh origin/dev origin/dev HEAD   # the deployed copy's check: the one that decides
-+# With the dev-gate on (IaC #35, final at aaf2e71; cl-6.conductor and cl-6.security@, 27 Nov 2026): no force anywhere, never push dev.
-+# Plain push of the release commit to work/<agent>; the gate fast-forwards dev to it. A tag gate/<agent>/<sha12>-fail means the
-+# gate refused it (stop and report). If dev moves, merge origin/dev into HEAD with a signed merge commit (never rebase) and push
-+# again as a fast-forward. To drop a refused commit, revert it; history is never rewritten.
-+AGENT_NAME=cl-6.signals   # hard-coded, never from the environment
- for i in 1 2 3 4 5; do
-   git fetch -q origin dev
+-for i in 1 2 3 4 5; do
+-  git fetch -q origin dev
 -  git rebase -q origin/dev
-+  git merge-base --is-ancestor origin/dev HEAD || git merge --no-edit -S origin/dev   # a signed merge, by commit.gpgsign
-+  # a leftover work/<agent> head from an earlier release is merged onto, never overwritten (cl-6.security@, 27 Nov 2026)
-+  if [ -n "$(git ls-remote origin "refs/heads/work/${AGENT_NAME}" | cut -f1)" ]; then
-+    git fetch -q origin "refs/heads/work/${AGENT_NAME}:refs/remotes/origin/work/${AGENT_NAME}"
-+    git merge-base --is-ancestor "origin/work/${AGENT_NAME}" HEAD || git merge --no-edit -S "origin/work/${AGENT_NAME}"
-+  fi
++# With the dev-gate on: the FINAL release recipe (cl-6.conductor, agreed by cl-6.infra and cl-6.security@, 27 Nov 2026; IaC #35).
++# The release commit is already signed on top of origin/dev. Plain push to work/<agent>, never force, never dev or main; the gate
++# fast-forwards dev to it. A tag gate/<agent>/<sha12>-fail means the gate refused it: stop and report. Only if the push is
++# refused as a non-fast-forward (something else moved dev, or an earlier release left a work head): merge origin/dev (and that
++# head) into this branch with a signed merge commit, run every gate again, push again. Undo a refused commit with a signed
++# revert; history is never rewritten.
++AGENT_NAME=cl-6.signals   # hard-coded, never from the environment
++gates() {
    # One gate per line: under set -e a failure inside an && chain does not stop the script (specialist.code@ finding 1).
    node scripts/build.mjs >/dev/null
    node scripts/validate.mjs >/dev/null
-@@ -29,7 +39,16 @@ for i in 1 2 3 4 5; do
+@@ -29,7 +34,25 @@ for i in 1 2 3 4 5; do
    node scripts/check-commits.mjs origin/dev HEAD >/dev/null
    node scripts/check-signatures.mjs origin/dev HEAD >/dev/null
    scripts/check-signatures-trusted.sh origin/dev origin/dev HEAD >/dev/null
 -  if git -c push.negotiate=true push -q origin HEAD:dev; then echo "released $(git rev-parse --short HEAD) to dev"; exit 0; fi
 -  sleep $((i * 3))
-+  sha=$(git rev-parse HEAD)
-+  base=$(git rev-parse origin/dev)
-+  git -c push.negotiate=true push -q origin "HEAD:refs/heads/work/${AGENT_NAME}"
-+  # up to about 20 minutes, a look every 90 seconds
-+  for w in $(seq 1 13); do
-+    sleep 90
-+    head=$(git ls-remote origin refs/heads/dev | cut -f1)
-+    if [ "$head" = "$sha" ]; then echo "released ${sha:0:7} to dev"; exit 0; fi
-+    if git ls-remote --tags origin "refs/tags/gate/${AGENT_NAME}/${sha:0:12}-fail" | grep -q .; then echo "the gate refused ${sha:0:12} (tag gate/${AGENT_NAME}/${sha:0:12}-fail): stop and report" >&2; exit 1; fi
-+    [ "$head" = "$base" ] || break   # dev moved and is not our SHA: merge it in and push again
-+  done
++}
++pushed=no
++for i in 1 2 3 4 5; do
++  if git -c push.negotiate=true push -q origin "HEAD:refs/heads/work/${AGENT_NAME}"; then pushed=yes; break; fi
++  # refused as a non-fast-forward: merge, never rebase
++  git fetch -q origin dev
++  git merge-base --is-ancestor origin/dev HEAD || git merge --no-edit -S origin/dev
++  if [ -n "$(git ls-remote origin "refs/heads/work/${AGENT_NAME}" | cut -f1)" ]; then
++    git fetch -q origin "refs/heads/work/${AGENT_NAME}:refs/remotes/origin/work/${AGENT_NAME}"
++    git merge-base --is-ancestor "origin/work/${AGENT_NAME}" HEAD || git merge --no-edit -S "origin/work/${AGENT_NAME}"
++  fi
++  gates
++done
++[ "$pushed" = yes ] || { echo "work/${AGENT_NAME} was refused after 5 rounds: stop and report" >&2; exit 1; }
++sha=$(git rev-parse HEAD)
++# up to about 20 minutes, a look every 90 seconds
++for w in $(seq 1 13); do
++  sleep 90
++  if [ "$(git ls-remote origin refs/heads/dev | cut -f1)" = "$sha" ]; then echo "released ${sha:0:7} to dev"; exit 0; fi
++  if git ls-remote --tags origin "refs/tags/gate/${AGENT_NAME}/${sha:0:12}-fail" | grep -q .; then echo "the gate refused ${sha:0:12} (tag gate/${AGENT_NAME}/${sha:0:12}-fail): stop and report" >&2; exit 1; fi
  done
 -echo "release failed after 5 attempts" >&2; exit 1
-+echo "release did not reach dev after 5 rounds" >&2; exit 1
++echo "dev did not reach ${sha:0:7} within about 20 minutes: stop and report" >&2; exit 1
