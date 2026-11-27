@@ -13,3 +13,5 @@ Next, once unblocked: apply the patches, rebuild when data.promptugal.news has a
 2026-11-26T06:07Z: holding. The conductor says to push key-bootstrap-cl-6-signals and open the key PR once PrompTugal__IaC has policy/key-bootstrap.json merged; not yet (IaC dev has only policy/abp.json). The branch exists only in the session's clone: if the session ends, rebuild it from prepared/PrompTugal__News__Signals (git am, base c4b0113, in order).
 
 2026-11-26T18:36Z: session ids changed today. Live: cl-6.conductor session_016CrbJMiN8eUtML9vvvGCVt (old session_016CrbJKttr9TiHHDsuGnmF1 archived); cl-6.abp session_016CrbJLnbr219cU3eVRGxBW. cl-6.security was session_016CrbJKgXxEmneR8fKwoPhS: not in the notice, check cl-6.maestro's sessions.json before messaging it.
+
+2026-11-27T02:43Z: dev-gate: prepared a release.sh patch (push work/<agent>, wait for the gate, never push dev; IaC #35) at prepared/PrompTugal__News__Signals/0003-*.patch for cl-6.security. Not applied: the conductor says change nothing until cl-6.abp's P19 is in force; release as now until then. Untested against a live gate.
