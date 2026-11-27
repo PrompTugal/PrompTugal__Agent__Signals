@@ -1,19 +1,31 @@
 diff --git a/scripts/release.sh b/scripts/release.sh
-index 3eb9343..8e62cf7 100755
+index 3eb9343..229bf97 100755
 --- a/scripts/release.sh
 +++ b/scripts/release.sh
-@@ -19,6 +19,10 @@ node scripts/test-check-signatures.mjs
+@@ -1,5 +1,5 @@
+ #!/usr/bin/env bash
+-# Run every gate, then rebase on dev and push. Stops at the first failure. Never pipe a gate.
++# Run every gate, then push to work/<agent> and wait for the gate to advance dev (no force, never dev). Stops at the first failure. Never pipe a gate.
+ set -euo pipefail
+ cd "$(dirname "$0")/.."
+ # Refuse during a hold (finding 3), with uncommitted changes (finding 4: the gates must check what is
+@@ -19,9 +19,14 @@ node scripts/test-check-signatures.mjs
  scripts/test-deciding-step.sh
  node scripts/check-signatures.mjs origin/dev HEAD   # this tree's check, as a test of it
  scripts/check-signatures-trusted.sh origin/dev origin/dev HEAD   # the deployed copy's check: the one that decides
-+# With the dev-gate on (IaC #35, cl-6.conductor, 27 Nov 2026): never push dev. Push the release commit to work/<agent>, then wait for
-+# the gate to fast-forward dev to it. A tag gate/<agent>/<sha12>-fail means the gate refused the release.
-+AGENT_NAME=cl-6.signals   # hard-coded, never from the environment (cl-6.security@, 27 Nov 2026)
-+last=""                   # the sha this script last pushed to work/${AGENT_NAME}; empty means the branch must not exist yet
++# With the dev-gate on (IaC #35, final at aaf2e71; cl-6.conductor and cl-6.security@, 27 Nov 2026): no force anywhere, never push dev.
++# Plain push of the release commit to work/<agent>; the gate fast-forwards dev to it. A tag gate/<agent>/<sha12>-fail means the
++# gate refused it (stop and report). If dev moves, merge origin/dev into HEAD with a signed merge commit (never rebase) and push
++# again as a fast-forward. To drop a refused commit, revert it; history is never rewritten.
++AGENT_NAME=cl-6.signals   # hard-coded, never from the environment
  for i in 1 2 3 4 5; do
    git fetch -q origin dev
-   git rebase -q origin/dev
-@@ -29,7 +33,18 @@ for i in 1 2 3 4 5; do
+-  git rebase -q origin/dev
++  git merge-base --is-ancestor origin/dev HEAD || git merge --no-edit -S origin/dev   # a signed merge, by commit.gpgsign
+   # One gate per line: under set -e a failure inside an && chain does not stop the script (specialist.code@ finding 1).
+   node scripts/build.mjs >/dev/null
+   node scripts/validate.mjs >/dev/null
+@@ -29,7 +34,16 @@ for i in 1 2 3 4 5; do
    node scripts/check-commits.mjs origin/dev HEAD >/dev/null
    node scripts/check-signatures.mjs origin/dev HEAD >/dev/null
    scripts/check-signatures-trusted.sh origin/dev origin/dev HEAD >/dev/null
@@ -21,16 +33,14 @@ index 3eb9343..8e62cf7 100755
 -  sleep $((i * 3))
 +  sha=$(git rev-parse HEAD)
 +  base=$(git rev-parse origin/dev)
-+  # only the explicit lease, naming the sha last pushed: never -f, never --force, never a bare lease, never another ref
-+  git -c push.negotiate=true push -q --force-with-lease="refs/heads/work/${AGENT_NAME}:${last}" origin "HEAD:refs/heads/work/${AGENT_NAME}"
-+  last="$sha"
++  git -c push.negotiate=true push -q origin "HEAD:refs/heads/work/${AGENT_NAME}"
 +  # up to about 20 minutes, a look every 90 seconds
 +  for w in $(seq 1 13); do
 +    sleep 90
-+    if [ "$(git ls-remote origin refs/heads/dev | cut -f1)" = "$sha" ]; then echo "released ${sha:0:7} to dev"; exit 0; fi
-+    if git ls-remote --tags origin "refs/tags/gate/${AGENT_NAME}/${sha:0:12}-fail" | grep -q .; then echo "the gate refused ${sha:0:12} (tag gate/${AGENT_NAME}/${sha:0:12}-fail): stop and report" >&2; exit 1; fi
 +    head=$(git ls-remote origin refs/heads/dev | cut -f1)
-+    [ "$head" = "$base" ] || break   # dev moved and is not our SHA: rebase and push again
++    if [ "$head" = "$sha" ]; then echo "released ${sha:0:7} to dev"; exit 0; fi
++    if git ls-remote --tags origin "refs/tags/gate/${AGENT_NAME}/${sha:0:12}-fail" | grep -q .; then echo "the gate refused ${sha:0:12} (tag gate/${AGENT_NAME}/${sha:0:12}-fail): stop and report" >&2; exit 1; fi
++    [ "$head" = "$base" ] || break   # dev moved and is not our SHA: merge it in and push again
 +  done
  done
 -echo "release failed after 5 attempts" >&2; exit 1
